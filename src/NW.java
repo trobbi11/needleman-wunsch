@@ -7,6 +7,8 @@ public class NW {
 		FileReader blosumFReader = new FileReader(blosumFile);
 		BufferedReader blosumBReader = new BufferedReader(blosumFReader);
 		
+		
+		
 		String seq1 = "HEA";
 		String seq2 = "HA";
 		int seq1Length = seq1.length();
@@ -50,7 +52,7 @@ public class NW {
 		
 		// Initialize top left cell
 		cell[0][0] = new Cell("last",0);
-		
+		System.out.print(cell[0][0].score);
 		// Fill in gap penalties
 		for (int x=1; x <= seq1.length(); x++){
 			cell[x][0] = new Cell("left",-8*x);
@@ -69,27 +71,30 @@ public class NW {
 		int left;
 		int diagonal;
 		int max;
-		for(int y = 1; y < seq2.length(); y++){
-			for(int x = 1; x < seq1.length(); x++){
+		for(int y = 1; y <= seq2.length(); y++){
+			for(int x = 1; x <= seq1.length(); x++){
 				up = cell[x][y-1].score - 8;
 				left = cell[x-1][y].score - 8;
 				diagonal = cell[x-1][y-1].score + matrix[residues.indexOf(seq1Array[x-1])][residues.indexOf(seq2Array[y-1])];
+				//System.out.println(diagonal);
 				max = 0;
 				int maxArray[] = {up,left,diagonal};
 				
 				// determine a maximum value
-				for(int i = 0; i < 3; i++){
-					if(maxArray[i] > max){
-						max = maxArray[i];
-					}
-				}
+				max = Math.max(up, Math.max(left, diagonal));
 				System.out.println(max);
+				//for(int i = 0; i < 3; i++){
+				//	System.out.println(maxArray[i]);
+				//	if(maxArray[i] > max){
+				//		max = maxArray[i];
+				//	}
+				//}
+				//System.out.println(max);
 				Cell maxAlign = new Cell(max);
 				
 				// set direction for maximum alignment
 				if(max==up){
 					maxAlign.dir = "up";
-					System.out.println("Up");
 				}else if(max==left){
 					maxAlign.dir = "left";
 				}else{
@@ -110,28 +115,33 @@ public class NW {
 		}
 		
 		Cell prev = cell[seq1.length()][seq2.length()];
+		System.out.println(prev.score);
 		StringBuilder seqOneAlign = new StringBuilder();
 		StringBuilder seqTwoAlign = new StringBuilder();
 		int score = prev.score;
 		
 		while(!prev.dir.equals("last")){
 			if(prev.dir.equals("up")){
+				System.out.println("Up");
 				--seq2Length;
 				seqOneAlign.append("-");
 				seqTwoAlign.append(seq2.charAt(seq2Length));
 			}else if(prev.dir.equals("left")){
+				System.out.println("Left");
 				--seq1Length;
 				seqOneAlign.append(seq1.charAt(seq1Length));
 				seqTwoAlign.append("-");
 			}else{
+				System.out.println("Diagonal");
 				--seq1Length;
 				--seq2Length;
 				seqOneAlign.append(seq1.charAt(seq1Length));
 				seqTwoAlign.append(seq2.charAt(seq2Length));
 			}
+			prev = cell[seq1Length][seq2Length];
 		}
-		System.out.println(seqOneAlign);
-		System.out.println(seqTwoAlign);
+		System.out.println(seqOneAlign.reverse());
+		System.out.println(seqTwoAlign.reverse());
 		
 		//System.out.print(seqMatrix[0][0] + " " + seqMatrix[1][0]);
 		
