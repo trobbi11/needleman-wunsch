@@ -9,6 +9,8 @@ public class NW {
 		
 		String seq1 = "HEA";
 		String seq2 = "HA";
+		int seq1Length = seq1.length();
+		int seq2Length = seq2.length();
 		
 		blosumBReader.readLine();
 		
@@ -47,7 +49,7 @@ public class NW {
 		//}
 		
 		// Initialize top left cell
-		cell[0][0] = new Cell("first",0);
+		cell[0][0] = new Cell("last",0);
 		
 		// Fill in gap penalties
 		for (int x=1; x <= seq1.length(); x++){
@@ -81,28 +83,56 @@ public class NW {
 						max = maxArray[i];
 					}
 				}
-				
+				System.out.println(max);
 				Cell maxAlign = new Cell(max);
 				
 				// set direction for maximum alignment
 				if(max==up){
 					maxAlign.dir = "up";
+					System.out.println("Up");
 				}else if(max==left){
 					maxAlign.dir = "left";
 				}else{
 					maxAlign.dir = "diagonal";
 				}
 				
+				// cell for 
 				cell[x][y] = maxAlign;
+				
 				//System.out.println(residues.indexOf(seq2Array[y]));
 				//seqMatrix[x][y] = matrix[residues.indexOf(seq1Array[x-1])][residues.indexOf(seq2Array[y-1])];
 				
-				System.out.print(seq1Array[x-1]);
-				System.out.print(seq2Array[y-1]);		
+				//System.out.print(seq1Array[x-1]);
+				//System.out.print(seq2Array[y-1]);		
 				//System.out.print(seqMatrix[x][y] + " ");
 			}
-			System.out.println();
+			//System.out.println();
 		}
+		
+		Cell prev = cell[seq1.length()][seq2.length()];
+		StringBuilder seqOneAlign = new StringBuilder();
+		StringBuilder seqTwoAlign = new StringBuilder();
+		int score = prev.score;
+		
+		while(!prev.dir.equals("last")){
+			if(prev.dir.equals("up")){
+				--seq2Length;
+				seqOneAlign.append("-");
+				seqTwoAlign.append(seq2.charAt(seq2Length));
+			}else if(prev.dir.equals("left")){
+				--seq1Length;
+				seqOneAlign.append(seq1.charAt(seq1Length));
+				seqTwoAlign.append("-");
+			}else{
+				--seq1Length;
+				--seq2Length;
+				seqOneAlign.append(seq1.charAt(seq1Length));
+				seqTwoAlign.append(seq2.charAt(seq2Length));
+			}
+		}
+		System.out.println(seqOneAlign);
+		System.out.println(seqTwoAlign);
+		
 		//System.out.print(seqMatrix[0][0] + " " + seqMatrix[1][0]);
 		
 		//for(char s1: seq1Array){
