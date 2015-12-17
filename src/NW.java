@@ -7,10 +7,12 @@ public class NW {
 		FileReader blosumFReader = new FileReader(blosumFile);
 		BufferedReader blosumBReader = new BufferedReader(blosumFReader);
 		
+		String fastaFile = "/home/tyler/git/needleman-wunsch/src/twoSeqs.txt";
+		List<FastaSequence> fastaList = FastaSequence.readFastaFile(fastaFile);
 		
 		
-		String seq1 = "HEA";
-		String seq2 = "HA";
+		String seq1 = fastaList.get(0).getSequence();
+		String seq2 = fastaList.get(1).getSequence();
 		int seq1Length = seq1.length();
 		int seq2Length = seq2.length();
 		
@@ -30,12 +32,11 @@ public class NW {
 		
 		while((line = blosumBReader.readLine()) != null && lineCount < 20){
 			numbers = line.split("\\s+");
-			//System.out.println(numbers[1]);
 			for(int i = 1; i < 21; i++){
 				matrix[lineCount][i-1] = Integer.parseInt(numbers[i]);
-				System.out.print(matrix[lineCount][i-1] + " ");
+				//System.out.print(matrix[lineCount][i-1] + " ");
 			}
-			System.out.println("");
+			//System.out.println("");
 			lineCount++;
 		}
 		
@@ -52,19 +53,19 @@ public class NW {
 		
 		// Initialize top left cell
 		cell[0][0] = new Cell("last",0);
-		System.out.print(cell[0][0].score);
+		//System.out.print(cell[0][0].score);
 		// Fill in gap penalties
 		for (int x=1; x <= seq1.length(); x++){
 			cell[x][0] = new Cell("left",-8*x);
-			System.out.print(cell[x][0].score);
+			//System.out.print(cell[x][0].score);
 		}
 		System.out.println();
 		for (int x=1; x <= seq2.length(); x++){
 			cell[0][x] = new Cell("up",-8*x);
-			System.out.println(cell[0][x].score);
+			//System.out.println(cell[0][x].score);
 			//seqMatrix[x][0] = x * -8;
 		}
-		System.out.println();
+		//System.out.println();
 		
 		// fill in scoring matrix
 		int up;
@@ -82,7 +83,7 @@ public class NW {
 				
 				// determine a maximum value
 				max = Math.max(up, Math.max(left, diagonal));
-				System.out.println(max);
+				//System.out.println(max);
 				//for(int i = 0; i < 3; i++){
 				//	System.out.println(maxArray[i]);
 				//	if(maxArray[i] > max){
@@ -115,24 +116,21 @@ public class NW {
 		}
 		
 		Cell prev = cell[seq1.length()][seq2.length()];
-		System.out.println(prev.score);
+		//System.out.println(prev.score);
 		StringBuilder seqOneAlign = new StringBuilder();
 		StringBuilder seqTwoAlign = new StringBuilder();
 		int score = prev.score;
 		
 		while(!prev.dir.equals("last")){
 			if(prev.dir.equals("up")){
-				System.out.println("Up");
 				--seq2Length;
 				seqOneAlign.append("-");
 				seqTwoAlign.append(seq2.charAt(seq2Length));
 			}else if(prev.dir.equals("left")){
-				System.out.println("Left");
 				--seq1Length;
 				seqOneAlign.append(seq1.charAt(seq1Length));
 				seqTwoAlign.append("-");
 			}else{
-				System.out.println("Diagonal");
 				--seq1Length;
 				--seq2Length;
 				seqOneAlign.append(seq1.charAt(seq1Length));
