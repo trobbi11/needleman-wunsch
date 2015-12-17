@@ -7,12 +7,10 @@ import java.util.List;
 public class FastaSequence {
 	private final String header;
 	private final String sequence;
-	private float gc = 0;
 
-	public FastaSequence(String header, String sequence, float gc){
+	public FastaSequence(String header, String sequence){
 		this.header = header;
 		this.sequence = sequence;
-		this.gc = gc;
 	}
 	
 	// returns the header of the sequence without the ">"
@@ -23,11 +21,6 @@ public class FastaSequence {
 	// returns the dna sequence of this fastasequence
 	public String getSequence(){
 		return this.sequence;
-	}
-	
-	// returns the number of G's and C's divided by the length of this sequence
-	public float getGCRatio(){
-		return this.gc;
 	}
 
 	public static List<FastaSequence> readFastaFile(String string) throws IOException{
@@ -46,9 +39,7 @@ public class FastaSequence {
 			{
 				if(count > 1){
 					total = seq.length();
-					gc = (seq.length() - seq.replaceAll("[GC]", "").length());
-					gc /= total;
-					FastaSequence sequenceObject = new FastaSequence(head,seq,gc);
+					FastaSequence sequenceObject = new FastaSequence(head,seq);
 					sequenceList.add(sequenceObject);
 					seq="";
 				}
@@ -63,7 +54,7 @@ public class FastaSequence {
 			}
 		}
 		if(count > 1){
-			FastaSequence sequenceObject = new FastaSequence(head,seq,gc);
+			FastaSequence sequenceObject = new FastaSequence(head,seq);
 			sequenceList.add(sequenceObject);
 			seq="";
 		}

@@ -139,7 +139,11 @@ public class NW {
 			prev = cell[seq1Length][seq2Length];
 		}
 		System.out.println(seqOneAlign.reverse());
+		for(int count = 0; count < seqOneAlign.length(); count++){
+			
+		}
 		System.out.println(seqTwoAlign.reverse());
+		System.out.println("Score: " + score);
 		
 		//System.out.print(seqMatrix[0][0] + " " + seqMatrix[1][0]);
 		
